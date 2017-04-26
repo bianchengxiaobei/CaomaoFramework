@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.UI;
 using UnityEngine;
 using CaomaoFramework;
 using CaomaoFramework.GameState;
-[CustomEditor(typeof(UnityMonoDriver))]
+[CustomEditor(typeof(UnityMonoDriver),true)]
 [CanEditMultipleObjects]
 public class UnityMonoDriverEditor : Editor
 {
@@ -19,7 +20,6 @@ public class UnityMonoDriverEditor : Editor
         GUI.skin = skin;
 
         driver = (UnityMonoDriver)target;
-
         EditorGUILayout.Space();
         //标题
         GUILayout.BeginVertical("游戏Mono驱动器", "window");

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using CaomaoFramework;
 [System.Serializable]
 public abstract class Node
 {
@@ -23,7 +25,15 @@ public abstract class Node
     }
     [SerializeField]
     private Vector2 _position = Vector2.zero;
+    [SerializeField]
+    private string m_sName;
+    [SerializeField]
+    private string m_sDescription;//描述
     private Vector2 size = new Vector2(100, 20);
+    [SerializeField]
+    private UnityEngine.Object scriptObject;
+    [SerializeField]
+    private string scriptName;
     private Graph m_graph = null;
 
     private int m_id = 0;
@@ -59,6 +69,52 @@ public abstract class Node
             }
             this.m_bIconLoaded = true;
             return this.m_icon;
+        }
+    }
+    public UnityEngine.Object ScriptObject
+    {
+        get
+        {        
+            if (this.scriptObject == null)
+            {
+                if (this.GetType().IsSubclassOf(typeof(StateNode)) || this.GetType().Equals(typeof(StateNode)))
+                {
+                    if (!string.IsNullOrEmpty(this.scriptName))
+                    {
+                        this.scriptObject = EditorTool.GetScriptOfType(typeof(ClientStateBase), this.scriptName);
+                    }
+                }
+            }
+            return this.scriptObject;
+        }
+    }
+    public virtual string Name
+    {
+        get
+        {
+            if (!string.IsNullOrEmpty(this.m_sName))
+            {
+                return this.m_sName;
+            }
+            else
+            {
+                var nameAttr = this.GetType().RTGetAttribute<NameAttribute>(false);
+                m_sName = nameAttr != null ? nameAttr.name : GetType().FullName;
+            }
+            return m_sName;
+        }
+        set { m_sName = value; }
+    }
+    public virtual string Description
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(this.m_sDescription))
+            {
+                var despAttr = GetType().RTGetAttribute<DescriptionAttribute>(false);
+                this.m_sDescription = despAttr != null ? despAttr.description : "没有描述";
+            }
+            return this.m_sDescription;
         }
     }
     /// <summary>
@@ -150,6 +206,8 @@ public abstract class Node
 
     #region 抽象属性
     abstract public Type outConnectionType { get; }
+    abstract public int maxInConnections { get; }
+    abstract public int maxOutConnections { get; }
     #endregion
     #endregion
     #region 构造方法
@@ -257,7 +315,86 @@ public abstract class Node
                 dragDropMisses++;
                 if (dragDropMisses == graph.allNodes.Count && clickedPort != null)
                 {
+                    var source = clickedPort.parent;
+                    var index = clickedPort.portIndex;
+                    var pos = e.mousePosition;
+                    clickedPort = null;
 
+                    System.Action<System.Type> Selected = delegate (System.Type type) {
+                        var newNode = graph.AddNode(type, pos);
+                        graph.ConnectNodes(source, newNode, index);
+                       // newNode.SortConnectionsByPositionX();
+                        Graph.currentSelection = newNode;
+                    };
+
+                }
+            }
+        }
+        if (maxInConnections == 0)
+        {
+            return;
+        }
+        var nodeOutputBox = new Rect(nodeRect.x, nodeRect.yMax - 4, nodeRect.width, 12);
+        GUI.Box(nodeOutputBox, "", (GUIStyle)"nodePortContainer");
+        if (outConnections.Count < maxOutConnections || maxOutConnections == -1)
+        {
+            for (var i = 0; i < outConnections.Count + 1; i++)
+            {
+                var portRect = new Rect(0, 0, 10, 10);
+                portRect.center = new Vector2(((nodeRect.width / (outConnections.Count + 1)) * (i + 0.5f)) + nodeRect.xMin, nodeRect.yMax + 6);
+                GUI.Box(portRect, "", (GUIStyle)"nodePortEmpty");
+
+                EditorGUIUtility.AddCursorRect(portRect, MouseCursor.ArrowPlus);
+                if (e.type == EventType.MouseDown && e.button == 0 && portRect.Contains(e.mousePosition))
+                {
+                    dragDropMisses = 0;
+                    clickedPort = new GUIPort(i, this, portRect.center);
+                    e.Use();
+                }
+            }
+        }
+
+        if (clickedPort != null && clickedPort.parent == this)
+        {
+            var yDiff = (clickedPort.pos.y - e.mousePosition.y) * 0.5f;
+            yDiff = e.mousePosition.y > clickedPort.pos.y ? -yDiff : yDiff;
+            var tangA = new Vector2(0, yDiff);
+            var tangB = tangA * -1;
+            Handles.DrawBezier(clickedPort.pos, e.mousePosition, clickedPort.pos + tangA, e.mousePosition + tangB, new Color(0.5f, 0.5f, 0.8f, 0.8f), null, 3);
+        }
+        for (var connectionIndex = 0; connectionIndex < outConnections.Count; connectionIndex++)
+        {
+
+            var connection = outConnections[connectionIndex];
+            if (connection != null)
+            {
+
+                var sourcePos = new Vector2(((nodeRect.width / (outConnections.Count + 1)) * (connectionIndex + 1)) + nodeRect.xMin, nodeRect.yMax + 6);
+                var targetPos = new Vector2(connection.targetNode.nodeRect.center.x, connection.targetNode.nodeRect.y);
+
+                var sourcePortRect = new Rect(0, 0, 12, 12);
+                sourcePortRect.center = sourcePos;
+                GUI.Box(sourcePortRect, "", (GUIStyle)"nodePortConnected");
+
+
+                connection.DrawConnectionGUI(sourcePos, targetPos);
+
+                //On right click disconnect connection from the source.
+                if (e.type == EventType.ContextClick && sourcePortRect.Contains(e.mousePosition))
+                {
+                    graph.RemoveConnection(connection);
+                    e.Use();
+                    return;
+                }
+
+                //On right click disconnect connection from the target.
+                var targetPortRect = new Rect(0, 0, 15, 15);
+                targetPortRect.center = targetPos;
+                if (e.type == EventType.ContextClick && targetPortRect.Contains(e.mousePosition))
+                {
+                    graph.RemoveConnection(connection);
+                    e.Use();
+                    return;
                 }
             }
         }
@@ -282,6 +419,7 @@ public abstract class Node
         ShowIcon();
         HandleEvents(e);
         ShowNodeContents();
+        this.HandleContextMenu(e);
         HandleNodePosition(e);
     }
     private void ShowIcon()
@@ -298,20 +436,26 @@ public abstract class Node
         GUI.skin.label.richText = true;
         GUI.skin.label.alignment = TextAnchor.MiddleCenter;
         GUILayout.BeginVertical();
-        if (this is IClientGameState)
-        {
-            var state = (this as IClientGameState).State;
-            if (state == null)
+        if (this.GetType().Equals(typeof(StateNode)))
+        {           
+            if (string.IsNullOrEmpty(this.scriptName))
             {
                 GUILayout.Label("当前没有状态");
             }
             else
             {
-                GUILayout.Label(string.Format("<b>{0}</b>", state.Name));
+                GUILayout.Label(string.Format("<b>{0}</b>", this.scriptName));
             }
         }
         GUILayout.EndVertical();
         GUI.skin.label.alignment = TextAnchor.UpperLeft;
+    }
+    public void ShowNodeInspectorGUI()
+    {
+        GUI.backgroundColor = new Color(0.8f, 0.8f, 1);
+        EditorGUILayout.HelpBox(Description, MessageType.None);
+        GUI.backgroundColor = Color.white;
+        this.OnNodeInspectorGUI();
     }
     /// <summary>
     /// 处理节点事件
@@ -340,7 +484,45 @@ public abstract class Node
             {
                 nodeIsPressed = true;
             }
+            //双击,进入脚本编辑
+            if (e.button == 0 && e.clickCount == 2)
+            {
+                if (this.GetType().Equals(typeof(StateNode)))
+                {
+                    EditorTool.OpenScriptOfType(typeof(ClientStateBase), this.scriptName);
+                }
+                e.Use();
+            }
         }
+    }
+    private void HandleContextMenu(Event e)
+    {
+        bool isContextClick = (e.button == 1 && e.type == EventType.MouseUp) || (e.control && e.type == EventType.MouseUp);
+        if (Graph.AllowClick && isContextClick)
+        {
+            if (Graph.multiSelection.Count > 1)
+            {
+
+            }
+            else
+            {
+                var menu = new GenericMenu();
+                menu.AddSeparator("/");
+                menu.AddItem(new GUIContent("删除"), false, () =>
+                {
+                    graph.RemoveNode(this);
+                    //这里还需判断是否存在脚本
+                    if (this.ScriptObject != null)
+                    {
+                        EditorTool.DeleteScript(this.ScriptObject);
+                        AssetDatabase.Refresh();
+                    }
+                });
+                Graph.PostGUI += () => { menu.ShowAsContext(); };
+                e.Use();
+            }
+        }
+        
     }
     /// <summary>
     /// 拖动节点
@@ -370,4 +552,52 @@ public abstract class Node
             GUI.DragWindow();
         }
     }
+    protected void DrawDefaultInspector()
+    {
+        if (this.ScriptObject == null)
+        {
+            EditorGUILayout.BeginHorizontal();
+            if (this.graph.baseNodeType.Equals(typeof(StateNode)) && this.GetType().Equals(typeof(StateNode)))
+            {
+                this.scriptName = EditorGUILayout.TextField("状态脚本名称", this.scriptName);
+                if (GUILayout.Button("创建"))
+                {
+                    if (string.IsNullOrEmpty(this.scriptName))
+                    {
+                        return;
+                    }
+                    string path = EditorUtility.OpenFolderPanel("选择保存脚本路径", "", "");
+                    TextAsset asset = Resources.Load<TextAsset>("ScriptsTemplate/ClientStateTemplate");
+                    if (asset != null)
+                    {
+                        TemplateSystem template = new TemplateSystem(asset.text);
+                        template.AddVariable("className", this.scriptName);
+                        path = path + "/" + this.scriptName + ".cs";
+                        using (StreamWriter sw = File.CreateText(path))
+                        {
+                            sw.Write(template.Parse());
+                        }
+                    }
+                    AssetDatabase.Refresh();
+                    //EditorTool.OpenScriptOfType(typeof(ClientStateBase), scriptName);
+                }
+                else if (this.graph.baseNodeType.Equals(typeof(UINode)))
+                {
+
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+        else
+        {
+            if (this.graph.baseNodeType.Equals(typeof(StateNode)) && this.GetType().Equals(typeof(StateNode)))
+            {
+
+            }
+        }
+    }
+    #region 子类重写
+    virtual protected void OnNodeInspectorGUI() { DrawDefaultInspector(); }
+    virtual public void OnDestroy() { }
+    #endregion
 }

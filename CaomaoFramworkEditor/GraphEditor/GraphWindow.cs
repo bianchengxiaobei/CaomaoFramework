@@ -7,6 +7,7 @@ public class GraphWindow : EditorWindow
 {
     public static Graph currentGraph;
     private Graph root;
+    private static bool m_bIsClosed = true;
 
     private Event evt;
     private GUISkin skin;
@@ -68,7 +69,11 @@ public class GraphWindow : EditorWindow
         GUI.backgroundColor = Color.white;
         evt = Event.current;
         GUI.skin = skin;
-
+        var setDirty = false;
+        if ((evt.type == EventType.MouseUp && evt.button != 2) || evt.type == EventType.KeyUp)
+        {
+            setDirty = true;
+        }
         currentGraph = root;
         this.HandleEvents(evt);
         canvasRect = new Rect(5, EditorCommonDefine.topMargin, position.width - 10, position.height - EditorCommonDefine.topMargin - 5);
@@ -126,6 +131,12 @@ public class GraphWindow : EditorWindow
             fullDrawPass = false;
             willRepaint = false;
         }
+        if (setDirty)
+        {
+            setDirty = false;
+            fullDrawPass = true;
+            EditorUtility.SetDirty(currentGraph);
+        }
         //关闭
         GUI.Box(canvasRect, "", "canvasBorders");
         GUI.skin = null;
@@ -134,6 +145,7 @@ public class GraphWindow : EditorWindow
     }
     private void OnEnable()
     {
+        m_bIsClosed = false;
 #if UNITY_5
         var canvasIcon = (Texture)Resources.Load("CanvasIcon");
         titleContent = new GUIContent("游戏状态编辑器", canvasIcon);
@@ -142,6 +154,7 @@ public class GraphWindow : EditorWindow
 #endif
         willRepaint = true;
         fullDrawPass = true;
+        m_bIsClosed = false;
         if (!skin)
         {
             skin = EditorGUIUtility.isProSkin ? Resources.Load("NodeCanvasSkin") as GUISkin : Resources.Load("NodeCanvasSkinLight") as GUISkin;
@@ -152,6 +165,7 @@ public class GraphWindow : EditorWindow
     }
     private void OnDisable()
     {
+        m_bIsClosed = true;
         Selection.selectionChanged -= OnSelectionChange;
     }
     #region 事件回调
@@ -171,6 +185,10 @@ public class GraphWindow : EditorWindow
     {
         var window = GetWindow<GraphWindow>();
         window.Close();
+    }
+    public static bool IsClosed()
+    {
+        return m_bIsClosed;
     }
     #endregion
     #region 私有方法

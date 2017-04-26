@@ -17,4 +17,12 @@ public class NameAttribute : Attribute
         this.name = name;
     }
 }
+public class DescriptionAttribute : Attribute
+{
+    public string description;
+    public DescriptionAttribute(string description)
+    {
+        this.description = description;
+    }
+}
 

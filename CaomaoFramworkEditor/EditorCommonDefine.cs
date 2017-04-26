@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,17 +16,18 @@ public class EditorCommonDefine
 }
 public static class EditorTool
 {
-    public static T RTGetAttribute<T>(this Type type, bool inherited) where T : Attribute
+   /* public static T RTGetAttribute<T>(this Type type, bool inherited) where T : Attribute
     {
         return (T)type.GetCustomAttributes(typeof(T), inherited).FirstOrDefault();
     }
+    */
     public static ScriptableObject CreateAsset(System.Type type, bool displayFilePanel)
     {
         ScriptableObject asset = null;
         var path = EditorUtility.SaveFilePanelInProject(
-                    "Create Asset of type " + type.ToString(),
+                    "创建Asset资源类型： " + type.ToString(),
                        type.Name + ".asset",
-                    "asset", "");
+                    "asset", "最好新建一个文件夹ScriptObjects来保存");
         asset = CreateAsset(type, path);
         return asset;
     }
@@ -48,9 +50,112 @@ public static class EditorTool
         GenericMenu.MenuFunction2 Selected = delegate (object selectedType) {
             callback((Type)selectedType);
         };
-        menu.AddItem(new GUIContent("新增游戏状态"), false, Selected, typeof(StateNode));
-        menu.AddItem(new GUIContent("新增游戏状态管理节点"), false, Selected, typeof(StateMrgNode));
+        if (baseType.Equals(typeof(StateNode)))
+        {
+            menu.AddItem(new GUIContent("新增游戏状态"), false, Selected, typeof(StateNode));
+            menu.AddItem(new GUIContent("新增游戏状态管理节点"), false, Selected, typeof(StateMrgNode));
+        }
+        else if (baseType.Equals(typeof(UINode)))
+        {
+            menu.AddItem(new GUIContent("新增游戏UI节点"), false, Selected, typeof(UINode));
+            menu.AddItem(new GUIContent("新增游戏UI管理节点"), false, Selected, typeof(StateMrgNode));
+        }
         return menu;
+    }
+    static public string GetFuncName(object obj, string method)
+    {
+        if (obj == null) return "<null>";
+        string type = obj.GetType().ToString();
+        type = type.Remove(0, type.LastIndexOf(".")+1);
+        int period = type.LastIndexOf('/');
+        if (period > 0) type = type.Substring(period + 1);
+        return string.IsNullOrEmpty(method) ? type : type + "/" + method;
+    }
+    public static List<string> GetFuncParamType(string func)
+    {
+        func = func.Remove(0, 1);
+        func = func.Remove(func.Length - 1, 1);
+        if (string.IsNullOrEmpty(func))
+        {
+            return null;
+        }
+        string[] paramTypes = func.Split(';');
+        List<string> types = new List<string>();
+        for (int i = 0; i < paramTypes.Length; i++)
+        {
+            types.Add(paramTypes[i]);
+        }
+        return types;
+    }
+    public static bool OpenScriptOfType(Type type,string name)
+    {
+        foreach (var path in AssetDatabase.GetAllAssetPaths())
+        {
+            if (path.EndsWith(name + ".cs"))
+            {
+                MonoScript script = (MonoScript)AssetDatabase.LoadAssetAtPath(path, typeof(MonoScript));
+                if (script == null)
+                {
+                    Debug.Log("没有找到该脚本");
+                    return false;
+                }
+                if (script.GetClass().IsSubclassOf(type))
+                {
+                    AssetDatabase.OpenAsset(script);
+                    return true;
+                }
+            }
+        }
+        Debug.Log("找不到该脚本");
+        return false;
+    }
+    public static UnityEngine.Object GetScriptOfType(Type type,string scriptName)
+    {
+        foreach (var path in AssetDatabase.GetAllAssetPaths())
+        {
+            if (path.EndsWith(scriptName + ".cs"))
+            {
+                MonoScript script = (MonoScript)AssetDatabase.LoadAssetAtPath(path, typeof(MonoScript));
+                if (script.GetClass().IsSubclassOf(type))
+                {
+                    return script;
+                }
+            }
+        }
+        return null;
+    }
+    public static UnityEngine.Object GetAssetOfType(Type type,string suffix)
+    {
+        foreach (var path in AssetDatabase.GetAllAssetPaths())
+        {
+            if (path.EndsWith(type.Name + suffix))
+            {
+                UnityEngine.Object asset = AssetDatabase.LoadAssetAtPath(path, type);
+                if (asset != null)
+                {
+                    return asset;
+                }
+                else
+                {
+                    Debug.LogError("找不到");
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+    /// <summary>
+    /// 删除脚本
+    /// </summary>
+    /// <param name="asset"></param>
+    public static void DeleteScript(UnityEngine.Object asset)
+    {
+        if (asset == null)
+        {
+            return;
+        }
+        string path = AssetDatabase.GetAssetPath(asset);
+        AssetDatabase.DeleteAsset(path);
     }
 }
 public enum ConnectionStatus
@@ -60,4 +165,10 @@ public enum ConnectionStatus
     Running = 2,
     Resting = 3,
     Error = 4
+}
+public enum TipConnectionStyle
+{
+    None,
+    Circle,
+    Arrow
 }

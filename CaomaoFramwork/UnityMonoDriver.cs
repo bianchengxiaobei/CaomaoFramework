@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using CaomaoFramework.GameState;
 namespace CaomaoFramework
 {
     public class UnityMonoDriver : MonoBehaviour
     {
-        private static UnityMonoDriver s_instance = null;
+        public static UnityMonoDriver s_instance = null;
 
         public int targetFrameRate;
 
         public ClientGameStateManager clientGameStateManager;
+
+        public ResourceManager resourceManager;
+
+        public SDKPlatformManager sdkManager;
+
+        public UIManager uiManager;
 
         private void Awake()
         {
@@ -20,7 +25,16 @@ namespace CaomaoFramework
             {
                 DontDestroyOnLoad(base.transform.parent);
             }
-
+            Singleton<UIManager>.singleton.Init();
+        }
+        private void Start()
+        {
+            sdkManager.Init();
+            sdkManager.Install();
+        }
+        private void Update()
+        {
+            sdkManager.Update();
         }
     }
 }

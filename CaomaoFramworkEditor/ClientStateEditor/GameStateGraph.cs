@@ -6,5 +6,11 @@ using System.Text;
 
 public class GameStateGraph : Graph
 {
-
+    public override Type baseNodeType
+    {
+        get
+        {
+            return typeof(StateNode);
+        }
+    }
 }
