@@ -120,8 +120,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceEditor\ResourceManagerEditor.cs" />
     <Compile Include="SDKPlatformEditor\SDKPlatformManagerEditor.cs" />
+    <Compile Include="Tools\GenericType.cs" />
     <Compile Include="Tools\PropertyReference.cs" />
     <Compile Include="Tools\PropertyReferenceDrawer.cs" />
+    <Compile Include="UIManagerEditor\UIConnection.cs" />
     <Compile Include="UIManagerEditor\UIGraph.cs" />
     <Compile Include="UIManagerEditor\UIManagerEditor.cs" />
     <Compile Include="UIManagerEditor\UIMrgNode.cs" />

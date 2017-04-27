@@ -7,12 +7,28 @@ using UnityEditor;
 public class UIManagerEditor : PropertyDrawer
 {
     private GUISkin skin;
-    private bool open;
+    private UIGraph uiManager;
+    private bool bIsOpen = false;
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         if (!skin)
         {
             skin = Resources.Load("skin") as GUISkin;
+        }
+        if (!uiManager)
+        {
+            uiManager = (UIGraph)EditorTool.GetAssetOfType(typeof(UIGraph), ".asset");
+            if (!uiManager)
+            {
+                if (EditorUtility.DisplayDialog("配置游戏UI界面管理器", "第一次需要配置游戏UI界面管理器！", "确定", "不要取消"))
+                {
+                    uiManager = (UIGraph)this.NewAsAsset();
+                }
+                else
+                {
+                    uiManager = (UIGraph)this.NewAsAsset();
+                }
+            }
         }
         GUI.skin = skin;
         GUILayout.BeginVertical("游戏UI界面管理器", "window");
@@ -23,18 +39,43 @@ public class UIManagerEditor : PropertyDrawer
         GUILayout.Space(10);
         EditorGUILayout.HelpBox("游戏UI界面管理器是管理不同场景游戏界面，比如登录界面，创建角色界面等", MessageType.Info);
         GUILayout.Space(10);
-
-        open = GUILayout.Toggle(open, open ? "关闭UI界面管理器" : "打开UI界面管理器", EditorStyles.toolbarButton);
-        if (open)
+        if (GraphWindow.IsClosed() == true)
+        {
+            if (GUILayout.Button("打开游戏UI界面管理器"))
+            {
+                bIsOpen = true;
+                GraphWindow.OpenWindow(uiManager);                
+            }
+        }
+        else
+        {
+            if (GUILayout.Button("关闭游戏UI界面管理器"))
+            {
+                bIsOpen = false;
+                GraphWindow.CloseWindow();
+            }
+        }
+        if (bIsOpen)
         {
             GUILayout.Space(10);
             var uiType = property.FindPropertyRelative("m_eUIType");
             EditorGUILayout.PropertyField(uiType, new GUIContent("UI界面插件类型"));
+            uiManager.uiPluginType = (EUIManagerType)uiType.enumValueIndex;
             GUILayout.Space(10);
-
             Dictionary<string, UIBase> uiDics = (property.serializedObject.targetObject as UnityMonoDriver).uiManager.m_dicUIs;
         }
+        GUI.enabled = true;
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndVertical();
+    }
+    private Graph NewAsAsset()
+    {
+        var newGraph = (Graph)EditorTool.CreateAsset(typeof(UIGraph), true);
+        if (newGraph != null)
+        {
+            EditorUtility.SetDirty(newGraph);
+            AssetDatabase.SaveAssets();
+        }
+        return newGraph;
     }
 }

@@ -31,10 +31,10 @@ public abstract class Node
     private string m_sDescription;//描述
     private Vector2 size = new Vector2(100, 20);
     [SerializeField]
-    private UnityEngine.Object scriptObject;
+    protected UnityEngine.Object scriptObject;
     [SerializeField]
-    private string scriptName;
-    private Graph m_graph = null;
+    protected string scriptName;
+    protected Graph m_graph = null;
 
     private int m_id = 0;
     private Texture2D m_icon;
@@ -82,6 +82,13 @@ public abstract class Node
                     if (!string.IsNullOrEmpty(this.scriptName))
                     {
                         this.scriptObject = EditorTool.GetScriptOfType(typeof(ClientStateBase), this.scriptName);
+                    }
+                }
+                else if (this.GetType().IsSubclassOf(typeof(UINode)) || this.GetType().Equals(typeof(UINode)))
+                {
+                    if (!string.IsNullOrEmpty(this.scriptName))
+                    {
+                        this.scriptObject = EditorTool.GetScriptOfType(typeof(UIBase), this.scriptName);
                     }
                 }
             }
@@ -437,10 +444,21 @@ public abstract class Node
         GUI.skin.label.alignment = TextAnchor.MiddleCenter;
         GUILayout.BeginVertical();
         if (this.GetType().Equals(typeof(StateNode)))
-        {           
+        {
             if (string.IsNullOrEmpty(this.scriptName))
             {
                 GUILayout.Label("当前没有状态");
+            }
+            else
+            {
+                GUILayout.Label(string.Format("<b>{0}</b>", this.scriptName));
+            }
+        }
+        else if (this.GetType().Equals(typeof(UINode)))
+        {
+            if (string.IsNullOrEmpty(this.scriptName))
+            {
+                GUILayout.Label("当前UI界面没有定义");
             }
             else
             {
@@ -490,6 +508,10 @@ public abstract class Node
                 if (this.GetType().Equals(typeof(StateNode)))
                 {
                     EditorTool.OpenScriptOfType(typeof(ClientStateBase), this.scriptName);
+                }
+                else if (this.GetType().Equals(typeof(UINode)))
+                {
+                    EditorTool.OpenScriptOfType(typeof(UIBase), this.scriptName);
                 }
                 e.Use();
             }

@@ -7,7 +7,6 @@ using CaomaoFramework;
 public class ClientGameStateManagerEditor : PropertyDrawer
 {
     private GUISkin skin;
-    private bool isOpen = false;
     GameStateGraph stateManager;
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -46,7 +45,6 @@ public class ClientGameStateManagerEditor : PropertyDrawer
         {
             if (GUILayout.Button("打开游戏状态管理器"))
             {
-                isOpen = true;
                 GraphWindow.OpenWindow(stateManager);
             }
         }
@@ -54,7 +52,6 @@ public class ClientGameStateManagerEditor : PropertyDrawer
         {
             if (GUILayout.Button("关闭游戏状态管理器"))
             {
-                isOpen = false;
                 GraphWindow.CloseWindow();
             }
         }

@@ -146,6 +146,11 @@ public class EventDelegateEditor
                                 EditorUtility.SetDirty(undoObject);
                             }
                         }
+                        else if (t == typeof(GenericType))
+                        {
+                            //如果是泛型的话
+
+                        }
                         PropertyReferenceDrawer.filter = typeof(void);
                         PropertyReferenceDrawer.canConvert = true;
                     }

@@ -3,21 +3,8 @@ using System.Collections.Generic;
 [Name("ClientState")]
 [Icon("ClientState/StateIcon")]
 [Description("每个游戏状态管理着该状态的进入和退出，进入该干什么事情，退出该干什么事情")]
-public class StateNode : Node, IClientGameState
+public class StateNode : Node
 {
-    private ClientGameState m_state;
-    public ClientGameState State
-    {
-        get
-        {
-            return m_state;
-        }
-
-        set
-        {
-            m_state = value;
-        }
-    }
     public override int maxInConnections
     {
         get

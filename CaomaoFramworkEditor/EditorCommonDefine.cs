@@ -58,7 +58,7 @@ public static class EditorTool
         else if (baseType.Equals(typeof(UINode)))
         {
             menu.AddItem(new GUIContent("新增游戏UI节点"), false, Selected, typeof(UINode));
-            menu.AddItem(new GUIContent("新增游戏UI管理节点"), false, Selected, typeof(StateMrgNode));
+            menu.AddItem(new GUIContent("新增游戏UI管理节点"), false, Selected, typeof(UIMrgNode));
         }
         return menu;
     }
@@ -83,7 +83,15 @@ public static class EditorTool
         List<string> types = new List<string>();
         for (int i = 0; i < paramTypes.Length; i++)
         {
-            types.Add(paramTypes[i]);
+            //如果是泛型的话
+            if (paramTypes[i].Equals("T") | paramTypes[i].Equals("U") | paramTypes[i].Equals("V") | paramTypes[i].Equals("X"))
+            {
+                types.Add(typeof(GenericType).Name);
+            }
+            else
+            {
+                types.Add(paramTypes[i]);
+            }
         }
         return types;
     }

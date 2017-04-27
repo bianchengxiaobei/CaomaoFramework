@@ -148,7 +148,7 @@ public class GraphWindow : EditorWindow
         m_bIsClosed = false;
 #if UNITY_5
         var canvasIcon = (Texture)Resources.Load("CanvasIcon");
-        titleContent = new GUIContent("游戏状态编辑器", canvasIcon);
+        titleContent = new GUIContent("游戏节点编辑器", canvasIcon);
 #else
         title = "游戏状态编辑器";
 #endif
