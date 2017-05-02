@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace CaomaoFramework
 {
+    [Serializable]
     public abstract class UIBase
     {
+        [SerializeField]
         protected Transform mRoot;//UI根目录
+        [SerializeField]
         protected string mResName;         //资源名
+        [SerializeField]
         protected bool mResident;          //是否常驻
+        [SerializeField]
         protected bool mVisible = false;   //是否可见
 
 

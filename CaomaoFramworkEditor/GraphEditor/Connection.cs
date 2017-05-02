@@ -17,6 +17,7 @@ public abstract class Connection
     private Color connectionColor = EditorCommonDefine.restingColor;
     private Vector3 lineFromTangent = Vector3.zero;
     private Vector3 lineToTangent = Vector3.zero;
+    private bool isRelinking = false;
     private float lineSize = 3;
     private Rect outPortRect;
     public Node sourceNode
@@ -177,6 +178,7 @@ public abstract class Connection
             lineSize = highlight ? defaultSize + 2 : defaultSize;
         }
 
+        HandleEvents();
         connectionColor = isActive ? connectionColor : new Color(0.3f, 0.3f, 0.3f);
 
         Handles.color = connectionColor;
@@ -201,6 +203,27 @@ public abstract class Connection
         areaRect.width = 0;
         areaRect.height = 0;
     }
+    /// <summary>
+    /// 显示连接点的Inspector界面
+    /// </summary>
+    public void ShowConnectionInspectorGUI()
+    {
+        GUILayout.BeginHorizontal();
+        GUI.color = new Color(1, 1, 1, 0.5f);
+        if (GUILayout.Button("◄", GUILayout.Height(14), GUILayout.Width(20)))
+            Graph.currentSelection = sourceNode;
+
+        if (GUILayout.Button("►", GUILayout.Height(14), GUILayout.Width(20)))
+            Graph.currentSelection = targetNode;
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("X", GUILayout.Height(14), GUILayout.Width(20)))
+        {
+            Graph.PostGUI += delegate { graph.RemoveConnection(this); };
+            return;
+        }
+        GUI.color = Color.white;
+        GUILayout.EndHorizontal();
+    }
     public void SetTarget(Node newTarget, bool isRelink = true)
     {
 #if UNITY_EDITOR
@@ -218,6 +241,45 @@ public abstract class Connection
         newTarget.inConnections.Add(this);
 
         targetNode = newTarget;
+    }
+    private void HandleEvents()
+    {
+        var e = Event.current;
+        //On click select this connection
+        if ((Graph.AllowClick && e.type == EventType.MouseDown && e.button == 0) && (areaRect.Contains(e.mousePosition) || outPortRect.Contains(e.mousePosition)))
+        {
+            if (!outPortRect.Contains(e.mousePosition))
+            {
+                isRelinking = true;
+            }
+            Graph.currentSelection = this;
+            e.Use();
+            return;
+        }
+        if (isRelinking)
+        {
+            Handles.DrawBezier(areaRect.center, e.mousePosition, areaRect.center, e.mousePosition, new Color(1, 1, 1, 0.5f), null, 2);
+            if (e.type == EventType.MouseUp)
+            {
+                foreach (var node in graph.allNodes)
+                {
+                    if (node.nodeRect.Contains(e.mousePosition) && node.IsNewConnectionAllowed(sourceNode))
+                    {
+                        SetTarget(node);
+                        break;
+                    }
+                }
+                isRelinking = false;
+                e.Use();
+            }
+        }
+        //按下键盘Delete删除连接点
+        if (Graph.currentSelection == this && e.type == EventType.KeyDown && e.keyCode == KeyCode.Delete && GUIUtility.keyboardControl == 0)
+        {
+            Graph.PostGUI += delegate { graph.RemoveConnection(this); };
+            e.Use();
+            return;
+        }
     }
     #region 抽象方法
     virtual public void OnDestroy() { }

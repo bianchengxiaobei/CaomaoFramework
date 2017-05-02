@@ -8,6 +8,7 @@ using System;
 using Object = UnityEngine.Object;
 public class EventDelegateEditor
 {
+    private ParamType type;
     public static void Field(List<EventDelegate> evts,Object undoObject)
     {
         if (null == evts)
@@ -99,6 +100,7 @@ public class EventDelegateEditor
             List<Entry> list = GetMethods(go);
             int index = 0;
             string[] names = PropertyReferenceDrawer.GetNames(list, del.ToString(), out index);
+            Debug.Log(del.ToString());
             int choice = 0;
 
             GUILayout.BeginHorizontal();
@@ -126,6 +128,8 @@ public class EventDelegateEditor
                     EventDelegate.Parameter param = ps[i];
                     Type t = Type.GetType(del.ParamTypes[i]);
                     Object obj = null;
+                    int select = 0;
+                    int index1 = 0;
                     if (t != typeof(MonoBehaviour))
                     {
                         if (t == typeof(string))
@@ -148,8 +152,21 @@ public class EventDelegateEditor
                         }
                         else if (t == typeof(GenericType))
                         {
-                            //如果是泛型的话
-
+                            //Debug.Log("fwefer2342343");
+                            ////如果是泛型的话
+                            //select = EditorGUILayout.Popup(index1,Enum.GetNames(typeof(ParamType)));
+                            //switch ((ParamType)select)
+                            //{
+                            //    case ParamType.Int:
+                            //        Debug.Log("fwefwef");
+                            //        param.intValue = EditorGUILayout.IntField("参数" + i, param.intValue);
+                            //        del.mParamGenericTypes.Add("System.Int");
+                            //        break;
+                            //    case ParamType.String:
+                            //        del.mParamGenericTypes.Add("System.String");  
+                            //        param.stringValue = EditorGUILayout.TextField(new GUIContent("参数" + i), param.stringValue);
+                            //        break;
+                            //}
                         }
                         PropertyReferenceDrawer.filter = typeof(void);
                         PropertyReferenceDrawer.canConvert = true;

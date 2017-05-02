@@ -6,7 +6,8 @@ public class UIGraph : Graph
 {
     [SerializeField]
     public EUIManagerType uiPluginType;
-
+    [SerializeField]
+    public static Dictionary<string, UIBase> uiDics = new Dictionary<string, UIBase>();
     public override Type baseNodeType
     {
         get

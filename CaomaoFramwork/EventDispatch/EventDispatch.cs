@@ -40,11 +40,7 @@ namespace CaomaoFramework
                 mEventTable.Remove(message);
             }
         }
-        public void Add(MonoBehaviour a)
-        {
-
-        }
-        public void Add(int a)
+        public void Add<T>(int a,T t)
         {
             Debug.Log(a);
         }

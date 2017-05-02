@@ -32,13 +32,17 @@ public class ResourceManagerEditor : PropertyDrawer
             if (path != null)
             {
                 EditorGUILayout.BeginVertical();
-                EditorGUILayout.LabelField(new GUIContent("资源加载路径:"), new GUIContent(path.stringValue));
-                if (GUILayout.Button("选择资源路径"))
+                if (string.IsNullOrEmpty(path.stringValue))
                 {
-                    path.stringValue = EditorUtility.OpenFolderPanel("选择资源加载路径","Resources", "Resources");
+                    if (GUILayout.Button("选择资源路径"))
+                    {
+                        path.stringValue = EditorUtility.OpenFolderPanel("选择资源加载路径", "Resources", "Resources");
+                    }
                 }
+                EditorGUILayout.LabelField(new GUIContent("资源加载路径:"), new GUIContent(path.stringValue));
                 EditorGUILayout.EndVertical();
             }
+            property.serializedObject.ApplyModifiedProperties();
         }
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndVertical();

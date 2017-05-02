@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace CaomaoFramework
 {
-    public class ClientStateBase
+    [Serializable]
+    public abstract class ClientStateBase
     {
         public virtual void OnEnter()
         {

@@ -35,9 +35,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEditor">
       <HintPath>D:\chenfuling\Unity5\Editor\Data\Managed\UnityEditor.dll</HintPath>
@@ -52,61 +50,10 @@
   <ItemGroup>
     <Compile Include="Attributes.cs" />
     <Compile Include="EventDelegateDrawer.cs" />
-    <Compile Include="JsonSerializer\AnimationCurve_DirectConverter.cs" />
-    <Compile Include="JsonSerializer\Bounds_DirectConverter.cs" />
-    <Compile Include="JsonSerializer\fsAotCompilationManager.cs" />
-    <Compile Include="JsonSerializer\fsArrayConverter.cs" />
-    <Compile Include="JsonSerializer\fsBaseConverter.cs" />
-    <Compile Include="JsonSerializer\fsContext.cs" />
-    <Compile Include="JsonSerializer\fsConverter.cs" />
-    <Compile Include="JsonSerializer\fsConverterRegistrar.cs" />
-    <Compile Include="JsonSerializer\fsCyclicReferenceManager.cs" />
-    <Compile Include="JsonSerializer\fsData.cs" />
-    <Compile Include="JsonSerializer\fsDateConverter.cs" />
-    <Compile Include="JsonSerializer\fsDictionaryConverter.cs" />
-    <Compile Include="JsonSerializer\fsDirectConverter.cs" />
-    <Compile Include="JsonSerializer\fsEnumConverter.cs" />
-    <Compile Include="JsonSerializer\fsForwardAttribute.cs" />
-    <Compile Include="JsonSerializer\fsGlobalConfig.cs" />
-    <Compile Include="JsonSerializer\fsGuidConverter.cs" />
-    <Compile Include="JsonSerializer\fsIEnumerableConverter.cs" />
-    <Compile Include="JsonSerializer\fsIgnoreAttribute.cs" />
-    <Compile Include="JsonSerializer\fsJsonParser.cs" />
-    <Compile Include="JsonSerializer\fsJsonPrinter.cs" />
-    <Compile Include="JsonSerializer\fsKeyValuePairConverter.cs" />
-    <Compile Include="JsonSerializer\fsMemberSerialization.cs" />
-    <Compile Include="JsonSerializer\fsMetaProperty.cs" />
-    <Compile Include="JsonSerializer\fsMetaType.cs" />
-    <Compile Include="JsonSerializer\fsNullableConverter.cs" />
-    <Compile Include="JsonSerializer\fsObjectAttribute.cs" />
-    <Compile Include="JsonSerializer\fsObjectProcessor.cs" />
-    <Compile Include="JsonSerializer\fsPortableReflection.cs" />
-    <Compile Include="JsonSerializer\fsPrimitiveConverter.cs" />
-    <Compile Include="JsonSerializer\fsPropertyAttribute.cs" />
-    <Compile Include="JsonSerializer\fsReflectedConverter.cs" />
-    <Compile Include="JsonSerializer\fsReflectionUtility.cs" />
-    <Compile Include="JsonSerializer\fsResult.cs" />
-    <Compile Include="JsonSerializer\fsSerializer.cs" />
-    <Compile Include="JsonSerializer\fsTypeCache.cs" />
-    <Compile Include="JsonSerializer\fsTypeConverter.cs" />
-    <Compile Include="JsonSerializer\fsTypeExtensions.cs" />
-    <Compile Include="JsonSerializer\fsUnityObjectConverter.cs" />
-    <Compile Include="JsonSerializer\fsWeakReferenceConverter.cs" />
-    <Compile Include="JsonSerializer\Gradient_DirectConverter.cs" />
-    <Compile Include="JsonSerializer\GraphSerializationData.cs" />
-    <Compile Include="JsonSerializer\GUIStyleState_DirectConverter.cs" />
-    <Compile Include="JsonSerializer\GUIStyle_DirectConverter.cs" />
-    <Compile Include="JsonSerializer\JSONSerializer.cs" />
-    <Compile Include="JsonSerializer\Keyframe_DirectConverter.cs" />
-    <Compile Include="JsonSerializer\LayerMask_DirectConverter.cs" />
-    <Compile Include="JsonSerializer\RectOffset_DirectConverter.cs" />
-    <Compile Include="JsonSerializer\Rect_DirectConverter.cs" />
-    <Compile Include="JsonSerializer\ReflectionTools.cs" />
+    <Compile Include="GraphEditor\GraphSerializationData.cs" />
     <Compile Include="ScriptsEditor\TemplateSystem.cs" />
     <Compile Include="Tools\CaomaoEditorTools.cs" />
-    <Compile Include="ClientStateEditor\ClientGameState.cs" />
     <Compile Include="ClientStateEditor\GameStateGraph.cs" />
-    <Compile Include="ClientStateEditor\IClientGameState.cs" />
     <Compile Include="ClientStateEditor\StateConnection.cs" />
     <Compile Include="ClientStateEditor\StateMrgNode.cs" />
     <Compile Include="ClientStateEditor\StateNode.cs" />
@@ -134,6 +81,10 @@
     <ProjectReference Include="..\CaomaoFramwork\CaomaoFramework.csproj">
       <Project>{485211ef-3937-47bd-9190-48521711e922}</Project>
       <Name>CaomaoFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JsonSerializer\JsonSerializer.csproj">
+      <Project>{8af92351-1f66-44df-a896-a9a6644f5eb1}</Project>
+      <Name>JsonSerializer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

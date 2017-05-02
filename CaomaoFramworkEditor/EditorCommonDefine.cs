@@ -117,6 +117,19 @@ public static class EditorTool
         Debug.Log("找不到该脚本");
         return false;
     }
+    public static Type GetScriptType(string scriptName)
+    {
+        foreach (var path in AssetDatabase.GetAllAssetPaths())
+        {
+            if (path.EndsWith(scriptName + ".cs"))
+            {
+                MonoScript script = (MonoScript)AssetDatabase.LoadAssetAtPath(path, typeof(MonoScript));
+                return script.GetClass();
+            }
+        }
+        Debug.Log("找不到");
+        return null;
+    }
     public static UnityEngine.Object GetScriptOfType(Type type,string scriptName)
     {
         foreach (var path in AssetDatabase.GetAllAssetPaths())
@@ -165,6 +178,15 @@ public static class EditorTool
         string path = AssetDatabase.GetAssetPath(asset);
         AssetDatabase.DeleteAsset(path);
     }
+    public static void RecordUndo(UnityEngine.Object asset,string name)
+    {
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+        {
+            UnityEditor.Undo.RecordObject(asset, name);
+        }
+#endif
+    }
 }
 public enum ConnectionStatus
 {
@@ -179,4 +201,9 @@ public enum TipConnectionStyle
     None,
     Circle,
     Arrow
+}
+public enum ParamType
+{
+    Int,
+    String
 }

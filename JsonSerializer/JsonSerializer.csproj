@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8AF92351-1F66-44DF-A896-A9A6644F5EB1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JsonSerializer</RootNamespace>
+    <AssemblyName>JsonSerializer</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNITY_EDITOR</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEditor">
+      <HintPath>D:\chenfuling\Unity5\Editor\Data\Managed\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>D:\chenfuling\Unity5\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="JsonSerializer\AnimationCurve_DirectConverter.cs" />
+    <Compile Include="JsonSerializer\Bounds_DirectConverter.cs" />
+    <Compile Include="JsonSerializer\fsAotCompilationManager.cs" />
+    <Compile Include="JsonSerializer\fsArrayConverter.cs" />
+    <Compile Include="JsonSerializer\fsBaseConverter.cs" />
+    <Compile Include="JsonSerializer\fsContext.cs" />
+    <Compile Include="JsonSerializer\fsConverter.cs" />
+    <Compile Include="JsonSerializer\fsConverterRegistrar.cs" />
+    <Compile Include="JsonSerializer\fsCyclicReferenceManager.cs" />
+    <Compile Include="JsonSerializer\fsData.cs" />
+    <Compile Include="JsonSerializer\fsDateConverter.cs" />
+    <Compile Include="JsonSerializer\fsDictionaryConverter.cs" />
+    <Compile Include="JsonSerializer\fsDirectConverter.cs" />
+    <Compile Include="JsonSerializer\fsEnumConverter.cs" />
+    <Compile Include="JsonSerializer\fsForwardAttribute.cs" />
+    <Compile Include="JsonSerializer\fsGlobalConfig.cs" />
+    <Compile Include="JsonSerializer\fsGuidConverter.cs" />
+    <Compile Include="JsonSerializer\fsIEnumerableConverter.cs" />
+    <Compile Include="JsonSerializer\fsIgnoreAttribute.cs" />
+    <Compile Include="JsonSerializer\fsJsonParser.cs" />
+    <Compile Include="JsonSerializer\fsJsonPrinter.cs" />
+    <Compile Include="JsonSerializer\fsKeyValuePairConverter.cs" />
+    <Compile Include="JsonSerializer\fsMemberSerialization.cs" />
+    <Compile Include="JsonSerializer\fsMetaProperty.cs" />
+    <Compile Include="JsonSerializer\fsMetaType.cs" />
+    <Compile Include="JsonSerializer\fsNullableConverter.cs" />
+    <Compile Include="JsonSerializer\fsObjectAttribute.cs" />
+    <Compile Include="JsonSerializer\fsObjectProcessor.cs" />
+    <Compile Include="JsonSerializer\fsPortableReflection.cs" />
+    <Compile Include="JsonSerializer\fsPrimitiveConverter.cs" />
+    <Compile Include="JsonSerializer\fsPropertyAttribute.cs" />
+    <Compile Include="JsonSerializer\fsReflectedConverter.cs" />
+    <Compile Include="JsonSerializer\fsReflectionUtility.cs" />
+    <Compile Include="JsonSerializer\fsResult.cs" />
+    <Compile Include="JsonSerializer\fsSerializer.cs" />
+    <Compile Include="JsonSerializer\fsTypeCache.cs" />
+    <Compile Include="JsonSerializer\fsTypeConverter.cs" />
+    <Compile Include="JsonSerializer\fsTypeExtensions.cs" />
+    <Compile Include="JsonSerializer\fsUnityObjectConverter.cs" />
+    <Compile Include="JsonSerializer\fsWeakReferenceConverter.cs" />
+    <Compile Include="JsonSerializer\Gradient_DirectConverter.cs" />
+    <Compile Include="JsonSerializer\GUIStyleState_DirectConverter.cs" />
+    <Compile Include="JsonSerializer\GUIStyle_DirectConverter.cs" />
+    <Compile Include="JsonSerializer\JSONSerializer.cs" />
+    <Compile Include="JsonSerializer\Keyframe_DirectConverter.cs" />
+    <Compile Include="JsonSerializer\LayerMask_DirectConverter.cs" />
+    <Compile Include="JsonSerializer\RectOffset_DirectConverter.cs" />
+    <Compile Include="JsonSerializer\Rect_DirectConverter.cs" />
+    <Compile Include="JsonSerializer\ReflectionTools.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

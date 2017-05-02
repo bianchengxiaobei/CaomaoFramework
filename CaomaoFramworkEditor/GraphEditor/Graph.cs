@@ -244,9 +244,14 @@ public abstract class Graph : ScriptableObject,ISerializationCallbackReceiver
     /// <param name="recordUndo"></param>
     public void RemoveConnection(Connection connection, bool recordUndo = true)
     {
+        if (recordUndo)
+        {
+            EditorTool.RecordUndo(this, "Delete Connection");
+        }
         connection.OnDestroy();
         connection.sourceNode.outConnections.Remove(connection);
         connection.targetNode.inConnections.Remove(connection);
+        connection.targetNode.OnDisConnection();
         currentSelection = null;
         UpdateNodeIDs(false);
     }
@@ -338,7 +343,7 @@ public abstract class Graph : ScriptableObject,ISerializationCallbackReceiver
     public void OnBeforeSerialize()
     {
         if (_objectReferences != null && _objectReferences.Any(o => o != null))
-        { //As it seems Unity requires double deserialize for objects
+        { 
             hasDeserialized = false;
         }
 #if UNITY_EDITOR
@@ -348,21 +353,20 @@ public abstract class Graph : ScriptableObject,ISerializationCallbackReceiver
     }
     public void OnAfterDeserialize()
     {
-        if (hasDeserialized && JSONSerializer.applicationPlaying) return; //avoid double call that Unity does (bug?)
+        if (hasDeserialized && JSONSerializer.applicationPlaying) return;
         hasDeserialized = true;
         this.Deserialize(_serializedGraph, false, _objectReferences);
     }
-    ///Serialize (save) the graph and returns the serialized json string
     public string Serialize(bool pretyJson, List<UnityEngine.Object> objectReferences)
     {
 
-        //if something went wrong on deserialization, dont serialize back, but rather keep what we had
+      
         if (_deserializationFailed)
         {
             _deserializationFailed = false;
             return _serializedGraph;
         }
-        //the list to save the references in. If not provided externaly we save into the local list
+      
         if (objectReferences == null)
         {
             objectReferences = this._objectReferences = new List<Object>();
@@ -375,7 +379,7 @@ public abstract class Graph : ScriptableObject,ISerializationCallbackReceiver
         UpdateNodeIDs(true);
         return JSONSerializer.Serialize(typeof(GraphSerializationData), new GraphSerializationData(this), pretyJson, objectReferences);
     }
-    ///Deserialize (load) the json serialized graph provided. Returns false if Deserialization failed
+
     public GraphSerializationData Deserialize(string serializedGraph, bool validate, List<UnityEngine.Object> objectReferences)
     {
 
@@ -383,8 +387,7 @@ public abstract class Graph : ScriptableObject,ISerializationCallbackReceiver
         {
             return null;
         }
-
-        //the list to load the references from. If not provided externaly we load from the local list (which is the case most times)
+        
         if (objectReferences == null)
         {
             objectReferences = this._objectReferences;
@@ -392,7 +395,6 @@ public abstract class Graph : ScriptableObject,ISerializationCallbackReceiver
 
         try
         {
-            //deserialize provided serialized graph into a new GraphSerializationData object and load it
             var data = JSONSerializer.Deserialize<GraphSerializationData>(serializedGraph, objectReferences);
             if (LoadGraphData(data, validate) == true)
             {
@@ -411,8 +413,6 @@ public abstract class Graph : ScriptableObject,ISerializationCallbackReceiver
             return null;
         }
     }
-
-    //TODO: Move this in GraphSerializationData object Reconstruction?
     bool LoadGraphData(GraphSerializationData data, bool validate)
     {
         if (data == null)
@@ -429,15 +429,19 @@ public abstract class Graph : ScriptableObject,ISerializationCallbackReceiver
 
         data.Reconstruct(this);
 
-        //grab the final data and set fields directly
         this._name = data.name;
         this._translation = data.translation;
         this._zoomFactor = data.zoomFactor;
         this._nodes = data.nodes;
         this._primeNode = data.primeNode;
-
-        //IMPORTANT: Validate should be called in all deserialize cases outside of Unity's 'OnAfterDeserialize',
-        //like for example when loading from json, or manualy calling this outside of OnAfterDeserialize.
+        if (this is UIGraph)
+        {
+            UIGraph.uiDics = data.uiDic;
+        }
+        else if (this is GameStateGraph)
+        {
+            UIGraph.uiDics = data.uiDic;
+        }
         return true;
     }
     #region 私有方法
@@ -463,7 +467,7 @@ public abstract class Graph : ScriptableObject,ISerializationCallbackReceiver
     /// <param name="canvasMousePos"></param>
     private void ShowInspectorGUIPanel(Event e, Vector2 canvasMousePos)
     {
-        if (selectedNode == null)
+        if (selectedNode == null && selectedConnection == null)
         {
             inspectorRect.height = 0;
             return;
@@ -488,9 +492,8 @@ public abstract class Graph : ScriptableObject,ISerializationCallbackReceiver
         }
         else if (selectedConnection != null)
         {
-            //selectedConnection.ShowConnectionInspectorGUI();
+            selectedConnection.ShowConnectionInspectorGUI();
         }
-
         GUILayout.Box("", GUILayout.Height(5), GUILayout.Width(inspectorRect.width - 10));
         GUI.skin = lastSkin;
         if (e.type == EventType.Repaint)
@@ -503,7 +506,6 @@ public abstract class Graph : ScriptableObject,ISerializationCallbackReceiver
 
         if (GUI.changed)
         {
-            Debug.Log("3333");
             EditorUtility.SetDirty(this);
         }
     }

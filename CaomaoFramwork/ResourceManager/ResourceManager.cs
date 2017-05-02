@@ -7,6 +7,7 @@ namespace CaomaoFramework
     [System.Serializable]
     public class ResourceManager
     {
+        [SerializeField]
         public string strAssetPath;
         private IResourceManager m_resourceManager;
         private static ResourceManager s_instance;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CaomaoFramework;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 [CustomPropertyDrawer(typeof(UIManager), true)]
 public class UIManagerEditor : PropertyDrawer
 {
@@ -61,12 +62,15 @@ public class UIManagerEditor : PropertyDrawer
             var uiType = property.FindPropertyRelative("m_eUIType");
             EditorGUILayout.PropertyField(uiType, new GUIContent("UI界面插件类型"));
             uiManager.uiPluginType = (EUIManagerType)uiType.enumValueIndex;
-            GUILayout.Space(10);
-            Dictionary<string, UIBase> uiDics = (property.serializedObject.targetObject as UnityMonoDriver).uiManager.m_dicUIs;
+            GUILayout.Space(10);           
         }
+        (property.serializedObject.targetObject as UnityMonoDriver).uiManager.m_dicUIs = new Dictionary<string, UIBase>(UIGraph.uiDics);
+        //Debug.Log("fwefewf:"+ (property.serializedObject.targetObject as UnityMonoDriver).uiManager.m_dicUIs.Count);
+        EditorUtility.SetDirty(property.serializedObject.targetObject);
         GUI.enabled = true;
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndVertical();
+        property.serializedObject.ApplyModifiedProperties();
     }
     private Graph NewAsAsset()
     {

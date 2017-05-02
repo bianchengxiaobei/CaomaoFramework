@@ -15,8 +15,7 @@ public class ClientGameStateManagerEditor : PropertyDrawer
             skin = Resources.Load("skin") as GUISkin;
         }
         if (!stateManager)
-        {
-            //stateManager = AssetDatabase.LoadAssetAtPath<GameStateGraph>("Assets/ScriptObject/ClientState/GameStateGraph.asset");
+        {          
             stateManager = (GameStateGraph)EditorTool.GetAssetOfType(typeof(GameStateGraph), ".asset");
             if (!stateManager)
             {
@@ -55,6 +54,8 @@ public class ClientGameStateManagerEditor : PropertyDrawer
                 GraphWindow.CloseWindow();
             }
         }
+        (property.serializedObject.targetObject as UnityMonoDriver).clientGameStateManager.m_oClientStateMachine.m_dicClientStates = new Dictionary<string, ClientStateBase>(GameStateGraph.stateDics);
+        EditorUtility.SetDirty(property.serializedObject.targetObject);
         GUI.enabled = true;
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndVertical();

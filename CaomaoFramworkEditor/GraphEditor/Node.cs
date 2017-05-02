@@ -306,7 +306,7 @@ public abstract class Node
     /// </summary>
     /// <param name="canvasMousePos"></param>
     /// <param name="zoomFactor"></param>
-    public void DrawNodeConnections(Vector2 canvasMousePos, float zoomFactor)
+    public virtual void DrawNodeConnections(Vector2 canvasMousePos, float zoomFactor)
     {
         var e = Event.current;
         if (clickedPort != null && e.type == EventType.MouseUp && e.button == 0)
@@ -314,6 +314,7 @@ public abstract class Node
             if (nodeRect.Contains(e.mousePosition))
             {
                 graph.ConnectNodes(clickedPort.parent, this, clickedPort.portIndex);
+                this.PostConnectionActiveEvent();
                 clickedPort = null;
                 e.Use();
             }
@@ -405,6 +406,10 @@ public abstract class Node
                 }
             }
         }
+    }
+    protected virtual void PostConnectionActiveEvent()
+    {
+
     }
     /// <summary>
     /// 是否连接被允许
@@ -620,6 +625,7 @@ public abstract class Node
     }
     #region 子类重写
     virtual protected void OnNodeInspectorGUI() { DrawDefaultInspector(); }
+    virtual public void OnDisConnection() { }
     virtual public void OnDestroy() { }
     #endregion
 }

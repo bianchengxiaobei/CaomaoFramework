@@ -57,6 +57,8 @@ public class GraphWindow : EditorWindow
     {
         get { return ViewToCanvas(Event.current.mousePosition); }
     }
+    [SerializeField]
+    public static Action<string, System.Object> PostEvent;
     #endregion
     private void OnGUI()
     {
@@ -175,10 +177,11 @@ public class GraphWindow : EditorWindow
     }
     #endregion
     #region 打开窗体
-    public static GraphWindow OpenWindow(Graph graph)
+    public static GraphWindow OpenWindow(Graph graph,Action<string,System.Object> action = null)
     {
         var window = GetWindow<GraphWindow>();
         window.root = graph;
+        PostEvent = action;
         return window;
     }
     public static void CloseWindow()

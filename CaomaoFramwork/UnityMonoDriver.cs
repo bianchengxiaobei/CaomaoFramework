@@ -17,6 +17,7 @@ namespace CaomaoFramework
 
         public UIManager uiManager;
 
+
         private void Awake()
         {
             Application.targetFrameRate = targetFrameRate;
@@ -25,7 +26,7 @@ namespace CaomaoFramework
             {
                 DontDestroyOnLoad(base.transform.parent);
             }
-            Singleton<UIManager>.singleton.Init();
+            uiManager.Init();
         }
         private void Start()
         {

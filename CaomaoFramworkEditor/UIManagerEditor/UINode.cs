@@ -36,7 +36,17 @@ public class UINode : Node
             return typeof(UIConnection);
         }
     }
-
+    protected override void PostConnectionActiveEvent()
+    {
+        Type type = EditorTool.GetScriptType(this.scriptName);
+        UIGraph.uiDics.Add(this.scriptName, Activator.CreateInstance(type) as UIBase);
+        EditorUtility.SetDirty(this.graph);       
+    }
+    public override void OnDisConnection()
+    {
+        if (UIGraph.uiDics.Remove(this.scriptName))
+            EditorUtility.SetDirty(this.graph);
+    }
     protected override void OnNodeInspectorGUI()
     {
         base.OnNodeInspectorGUI();

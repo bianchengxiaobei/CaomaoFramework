@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+using CaomaoFramework;
 ///The object used to serialize and deserialize graphs. This class serves no other purpose
 [System.Serializable]
 public class GraphSerializationData
@@ -17,22 +17,28 @@ public class GraphSerializationData
     public List<Node> nodes;
     public List<Connection> connections;
     public Node primeNode;
-    public List<CanvasGroup> canvasGroups;
-
+    public Dictionary<string, UIBase> uiDic = new Dictionary<string, UIBase>();
+    public Dictionary<string, ClientStateBase> stateDic = new Dictionary<string, ClientStateBase>();
     //required
     public GraphSerializationData() { }
 
     //Construct
     public GraphSerializationData(Graph graph)
     {
-
         this.version = SerializationVersion;
         this.type = graph.GetType();
         this.name = graph.name;
         this.translation = graph.translation;
         this.zoomFactor = graph.zoomFactor;
         this.nodes = graph.allNodes;
-
+        if (graph is UIGraph)
+        {
+            this.uiDic = UIGraph.uiDics;
+        }
+        if (graph is GameStateGraph)
+        {
+            this.stateDic = GameStateGraph.stateDics;
+        }
         var structConnections = new List<Connection>();
         for (var i = 0; i < nodes.Count; i++)
         {

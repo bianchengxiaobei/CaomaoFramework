@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaomaoFramework", "CaomaoFr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaomaoFrameworkEditor", "CaomaoFramworkEditor\CaomaoFrameworkEditor.csproj", "{0C7DECA2-2DED-4BDE-8387-889502CAA6F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonSerializer", "JsonSerializer\JsonSerializer.csproj", "{8AF92351-1F66-44DF-A896-A9A6644F5EB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0C7DECA2-2DED-4BDE-8387-889502CAA6F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C7DECA2-2DED-4BDE-8387-889502CAA6F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C7DECA2-2DED-4BDE-8387-889502CAA6F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AF92351-1F66-44DF-A896-A9A6644F5EB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AF92351-1F66-44DF-A896-A9A6644F5EB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AF92351-1F66-44DF-A896-A9A6644F5EB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AF92351-1F66-44DF-A896-A9A6644F5EB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
