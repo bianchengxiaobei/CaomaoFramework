@@ -1,0 +1,58 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using CaomaoFramework;
+using FairyGUI;
+[Serializable]
+public class >:className:< : UIBase
+{
+	>:FOREVERY variables:<
+	public >:[0]:< m_>:[1]:<;
+	>:ENDFOREVERY:<
+    public >:className:<()
+    {
+        this.mResName = ">:resName:<";
+        this.mResident = >:resident:<;
+    }
+    public override void Init()
+    {
+        EventDispatch.AddListener(">:className:<", this.Show);
+    }
+
+    public override void OnDisable()
+    {
+        
+    }
+
+    public override void OnEnable()
+    {
+        
+    }
+
+    public override void Realse()
+    {
+        EventDispatch.RemoveListener(">:className:<", this.Show);
+    }
+
+    protected override void InitWidget()
+    {
+        >:FOREVERY variables:<
+		this.m_>:[1]:< = this.mRoot.GetComponent<UIPanel>().ui.GetChild(">:[2]:<") as >:[0]:<;
+		>:ENDFOREVERY:<
+    }
+
+    protected override void OnAddListener()
+    {
+        
+    }
+
+    protected override void OnRemoveListener()
+    {
+        
+    }
+
+    protected override void RealseWidget()
+    {
+       
+    }
+}

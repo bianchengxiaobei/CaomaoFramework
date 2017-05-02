@@ -1,4 +1,13 @@
 obj
 bin
-.user
-.suo
+Temp/
+Library/
+*.svd
+*.userprefs
+/*.csproj
+*.pidb
+*.suo
+/*.sln
+*.user
+*.unityproj
+*.booproj
