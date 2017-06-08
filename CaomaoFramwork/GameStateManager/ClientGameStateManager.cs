@@ -8,11 +8,13 @@ namespace CaomaoFramework
     /// 游戏状态管理器，提供改变游戏状态的接口
     /// </summary>
     [System.Serializable]
-    public class ClientGameStateManager
+    public class ClientGameStateManager : Singleton<ClientGameStateManager>
     {
         private Queue<ClientStateChangeArgs> m_qClientStateQueue = new Queue<ClientStateChangeArgs>();
         [SerializeField]
         public ClientGameStateMachine m_oClientStateMachine = new ClientGameStateMachine();
+        [SerializeField]
+        public string m_sDefalutGameStateName;
         /// <summary>
         /// 当前的状态
         /// </summary>
@@ -84,7 +86,21 @@ namespace CaomaoFramework
                 this.RegisterCallBackOnChangedFinished(new Action(this.ChangeGameStateQueue));
             }
         }
-
+        /// <summary>
+        /// 进入到默认入口
+        /// </summary>
+        /// <param name="defaultStateName"></param>
+        public void EnterDefaultState()
+        {
+            if (string.IsNullOrEmpty(this.m_sDefalutGameStateName))
+            {
+                return;
+            }
+            else
+            {
+                this.ChangeGameState(this.m_sDefalutGameStateName);
+            }
+        }
         public void ChangeGameStateQueue()
         {
             if (0 != this.m_qClientStateQueue.Count)

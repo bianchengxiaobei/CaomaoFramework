@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace CaomaoFramework
 {
-    [Serializable]
     public abstract class UIBase
     {
-        [SerializeField]
         protected Transform mRoot;//UI根目录
-        [SerializeField]
         protected string mResName;         //资源名
-        [SerializeField]
         protected bool mResident;          //是否常驻
-        [SerializeField]
         protected bool mVisible = false;   //是否可见
 
 
@@ -54,16 +49,12 @@ namespace CaomaoFramework
         {
             if (mRoot == null)
             {
-                if (Create())
-                {
-                    InitWidget();//初始化组件
-                }
+                Create();
             }
-
-            if (mRoot && mRoot.gameObject.activeSelf == false)
+            else if (mRoot && mRoot.gameObject.activeSelf == false)
             {
+                mRoot.SetAsFirstSibling();
                 mRoot.gameObject.SetActive(true);
-
                 mVisible = true;
 
                 OnEnable();
@@ -99,10 +90,7 @@ namespace CaomaoFramework
         {
             if (mRoot == null)
             {
-                if (Create())
-                {
-                    InitWidget();
-                }
+                Create();
             }
         }
 
@@ -117,39 +105,43 @@ namespace CaomaoFramework
         }
 
         //创建窗体
-        protected virtual bool Create()
+        protected virtual void Create()
         {
             if (mRoot)
             {
                 Debug.LogError("Window Create Error Exist!");
-                return false;
             }
 
             if (mResName == null || mResName == "")
             {
                 Debug.LogError("Window Create Error ResName is empty!");
-                return false;
             }
-
-            /*if (GameObject.Find("UICamera").transform == null)
+            GameObject uiObj = null;
+            ResourceManager.singleton.LoadUI(this.mResName,(request)=>
             {
-                Debug.LogError("Window Create Error GetUiCamera is empty! WindowName = " + mResName);
-                return false;
-            }
-            */
-            GameObject obj = GameObject.Instantiate(ResourceManager.singleton.Load(this.mResName)) as GameObject;
+                if (request != null)
+                {
+                    uiObj = GameObject.Instantiate(request.AssetResource.MainAsset as GameObject,Vector3.zero,Quaternion.identity,
+                        GameObject.FindGameObjectWithTag("UIRoot").transform);
+                    if (uiObj == null)
+                    {
+                        Debug.LogError("Window Create Error LoadRes WindowName = " + mResName);
+                    }
+                    mRoot = uiObj.transform;
 
-            if (obj == null)
-            {
-                Debug.LogError("Window Create Error LoadRes WindowName = " + mResName);
-                return false;
-            }
+                    mRoot.gameObject.SetActive(false);//设置为隐藏
 
-            mRoot = obj.transform;
-
-            mRoot.gameObject.SetActive(false);//设置为隐藏
-
-            return true;
+                    InitWidget();
+                    if (!IsResident())
+                    {
+                        mRoot.SetAsFirstSibling();
+                        mRoot.gameObject.SetActive(true);
+                        mVisible = true;
+                        OnEnable();
+                        OnAddListener();
+                    }
+                }
+            });      
         }
 
         //销毁窗体
@@ -158,6 +150,7 @@ namespace CaomaoFramework
             if (mRoot)
             {
                 // LoadUiResource.DestroyLoad(mRoot.gameObject);
+                GameObject.Destroy(mRoot.gameObject);
                 mRoot = null;
             }
         }

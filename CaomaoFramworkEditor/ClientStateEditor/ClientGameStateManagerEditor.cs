@@ -55,6 +55,8 @@ public class ClientGameStateManagerEditor : PropertyDrawer
             }
         }
         (property.serializedObject.targetObject as UnityMonoDriver).clientGameStateManager.m_oClientStateMachine.m_dicClientStates = new Dictionary<string, ClientStateBase>(GameStateGraph.stateDics);
+        SerializedProperty defalutStateName = property.FindPropertyRelative("m_sDefalutGameStateName");
+        EditorGUILayout.PropertyField(defalutStateName, new GUIContent("默认游戏状态名称"));
         EditorUtility.SetDirty(property.serializedObject.targetObject);
         GUI.enabled = true;
         EditorGUILayout.EndVertical();

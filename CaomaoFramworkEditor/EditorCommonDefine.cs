@@ -132,18 +132,35 @@ public static class EditorTool
     }
     public static UnityEngine.Object GetScriptOfType(Type type,string scriptName)
     {
-        foreach (var path in AssetDatabase.GetAllAssetPaths())
+        try
         {
-            if (path.EndsWith(scriptName + ".cs"))
+            foreach (var path in AssetDatabase.GetAllAssetPaths())
             {
-                MonoScript script = (MonoScript)AssetDatabase.LoadAssetAtPath(path, typeof(MonoScript));
-                if (script.GetClass().IsSubclassOf(type))
+                if (path.EndsWith(scriptName + ".cs"))
                 {
-                    return script;
+                    MonoScript script = (MonoScript)AssetDatabase.LoadAssetAtPath(path, typeof(MonoScript));
+                    if (script)
+                    {
+                        if (script.GetClass().IsSubclassOf(type))
+                        {
+                            return script;
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("在Project中找不到脚本：" + scriptName);
+                        return null;
+                    }
                 }
             }
+            return null;
         }
-        return null;
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+            return null;
+        }
+      
     }
     public static UnityEngine.Object GetAssetOfType(Type type,string suffix)
     {

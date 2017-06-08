@@ -36,7 +36,7 @@ public class StateNode : Node
     }
     public override void OnDisConnection()
     {
-        if (UIGraph.uiDics.Remove(this.scriptName))
+        if (GameStateGraph.stateDics.Remove(this.scriptName))
             EditorUtility.SetDirty(this.graph);
     }
 }

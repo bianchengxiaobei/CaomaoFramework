@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEditor;
+//using UnityEditor;
 using UnityEngine;
 public static class JSONSerializer
 {
 
-#if UNITY_EDITOR //this is used to avoid calling Unity API in serialization for the editor
+/*#if UNITY_EDITOR //this is used to avoid calling Unity API in serialization for the editor
         [UnityEditor.InitializeOnLoad]
         class StartUp{
             static StartUp(){
@@ -15,7 +15,7 @@ public static class JSONSerializer
             }
         }
 #endif
-
+*/
     private static Dictionary<string, fsData> cache = new Dictionary<string, fsData>();
     private static object serializerLock = new object();
     private static fsSerializer serializer = new fsSerializer();

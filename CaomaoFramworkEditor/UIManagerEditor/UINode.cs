@@ -86,7 +86,19 @@ public class UINode : Node
                         return;
                     }
                     string path = EditorUtility.OpenFolderPanel("选择保存脚本路径", "", "");
-                    TextAsset asset = Resources.Load<TextAsset>("ScriptsTemplate/FairyGUITemplate");
+                    TextAsset asset = null;
+                    switch ((this.graph as UIGraph).uiPluginType)
+                    {
+                        case EUIManagerType.e_FairyGUI:
+                            asset = Resources.Load<TextAsset>("ScriptsTemplate/FairyGUITemplate");
+                            break;
+                        case EUIManagerType.e_UGUI:
+                            asset = Resources.Load<TextAsset>("ScriptsTemplate/UGUITemplate");
+                            break;
+                        case EUIManagerType.e_NGUI:
+                            asset = Resources.Load<TextAsset>("ScriptsTemplate/NGUITemplate");
+                            break;
+                    }
                     if (asset != null)
                     {
                         TemplateSystem template = new TemplateSystem(asset.text);
@@ -102,16 +114,45 @@ public class UINode : Node
                             template.AddVariable("resName", content);
                         }
                         List<object[]> variables = new List<object[]>();
-                        for (int i = 0; i < this.uiVariables.Count; i++)
+                        switch ((this.graph as UIGraph).uiPluginType)
                         {
-                            object[] fieldData = new object[]
-                            {
+                            case EUIManagerType.e_FairyGUI:
+                                for (int i = 0; i < this.uiVariables.Count; i++)
+                                {
+                                    object[] fieldData = new object[]
+                                    {
                             (UIFairyPramaType)this.uiVariables[i].FieldType,
                             this.uiVariables[i].FieldName,
                             this.uiVariables[i].FieldPath
-                            };
-                            variables.Add(fieldData);
-                        }
+                                    };
+                                    variables.Add(fieldData);
+                                }
+                                break;
+                            case EUIManagerType.e_UGUI:
+                                for (int i = 0; i < this.uiVariables.Count; i++)
+                                {
+                                    object[] fieldData = new object[]
+                                    {
+                            (UIUGUIParamType)this.uiVariables[i].FieldType,
+                            this.uiVariables[i].FieldName,
+                            this.uiVariables[i].FieldPath
+                                    };
+                                    variables.Add(fieldData);
+                                }
+                                break;
+                            case EUIManagerType.e_NGUI:
+                                for (int i = 0; i < this.uiVariables.Count; i++)
+                                {
+                                    object[] fieldData = new object[]
+                                    {
+                            (UINGUIParamType)this.uiVariables[i].FieldType,
+                            this.uiVariables[i].FieldName,
+                            this.uiVariables[i].FieldPath
+                                    };
+                                    variables.Add(fieldData);
+                                }
+                                break;
+                        }                     
                         template.AddVariable("variables", variables.ToArray());
                         using (StreamWriter sw = File.CreateText(path))
                         {
@@ -133,9 +174,24 @@ public enum UIFairyPramaType
 }
 public enum UIUGUIParamType
 {
-    Button = 10,
+    Button = 100,
     Text,
-    Image
+    Image,
+    RawImage,
+    Toggle,
+    Slider,
+    Scrollbar,
+    Dropdown,
+    InputField,
+    Canvas,
+    Panel,
+    ScrollView,
+    EventSystem
+}
+public enum UINGUIParamType
+{
+    UIButton = 200,
+    UILabel
 }
 public class UIFieldEditor
 {
@@ -170,10 +226,12 @@ public class UIFieldEditor
                 this.FieldType = (int)fairygui;
                 break;
             case EUIManagerType.e_UGUI:
-
+                UIUGUIParamType ugui = (UIUGUIParamType)EditorGUILayout.EnumPopup("组件类型", (UIUGUIParamType)this.FieldType);
+                this.FieldType = (int)ugui;
                 break;
             case EUIManagerType.e_NGUI:
-
+                UINGUIParamType ngui = (UINGUIParamType)EditorGUILayout.EnumPopup("组件类型", (UINGUIParamType)this.FieldType);
+                this.FieldType = (int)ngui;
                 break;
         }
         

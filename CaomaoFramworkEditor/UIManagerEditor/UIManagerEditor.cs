@@ -36,7 +36,7 @@ public class UIManagerEditor : PropertyDrawer
         EditorGUILayout.Space();
         EditorGUILayout.Space();
         EditorGUILayout.BeginVertical();
-
+        
         GUILayout.Space(10);
         EditorGUILayout.HelpBox("游戏UI界面管理器是管理不同场景游戏界面，比如登录界面，创建角色界面等", MessageType.Info);
         GUILayout.Space(10);
@@ -65,7 +65,7 @@ public class UIManagerEditor : PropertyDrawer
             GUILayout.Space(10);           
         }
         (property.serializedObject.targetObject as UnityMonoDriver).uiManager.m_dicUIs = new Dictionary<string, UIBase>(UIGraph.uiDics);
-        //Debug.Log("fwefewf:"+ (property.serializedObject.targetObject as UnityMonoDriver).uiManager.m_dicUIs.Count);
+        //Debug.Log("UI:" + (property.serializedObject.targetObject as UnityMonoDriver).uiManager.m_dicUIs.Count);
         EditorUtility.SetDirty(property.serializedObject.targetObject);
         GUI.enabled = true;
         EditorGUILayout.EndVertical();

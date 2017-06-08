@@ -347,13 +347,12 @@ public abstract class Graph : ScriptableObject,ISerializationCallbackReceiver
             hasDeserialized = false;
         }
 #if UNITY_EDITOR
-			if (JSONSerializer.applicationPlaying) return;
+			//if (JSONSerializer.applicationPlaying) return;
 			_serializedGraph = this.Serialize(false, _objectReferences);
 #endif
     }
     public void OnAfterDeserialize()
     {
-        if (hasDeserialized && JSONSerializer.applicationPlaying) return;
         hasDeserialized = true;
         this.Deserialize(_serializedGraph, false, _objectReferences);
     }
@@ -440,7 +439,7 @@ public abstract class Graph : ScriptableObject,ISerializationCallbackReceiver
         }
         else if (this is GameStateGraph)
         {
-            UIGraph.uiDics = data.uiDic;
+            GameStateGraph.stateDics = data.stateDic;
         }
         return true;
     }
