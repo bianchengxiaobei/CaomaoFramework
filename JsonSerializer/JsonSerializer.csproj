@@ -40,7 +40,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>D:\chenfuling\Unity5\Editor\Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\CaomaoFramwork\Dlls\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

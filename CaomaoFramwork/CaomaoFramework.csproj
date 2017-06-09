@@ -51,10 +51,6 @@
     <Reference Include="UnityEditor">
       <HintPath>D:\chenfuling\Unity5\Editor\Data\Managed\UnityEditor.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\chenfuling\Unity5\Editor\Data\UnityExtensions\Unity\GUISystem\Editor\UnityEditor.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>D:\chenfuling\Unity5\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
@@ -146,6 +142,8 @@
   <ItemGroup>
     <Content Include="Dlls\DOTween.dll" />
     <Content Include="Dlls\FairyGUI.dll" />
+    <Content Include="Dlls\UnityEditor.dll" />
+    <Content Include="Dlls\UnityEngine.dll" />
     <Content Include="StoryManager\DSL\Parser\DslExecute.txt" />
     <Content Include="StoryManager\DSL\Parser\DslKeywords.txt" />
   </ItemGroup>
