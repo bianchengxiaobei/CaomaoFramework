@@ -28,7 +28,7 @@ namespace CaomaoFramework
             {
                 FrameTimerManager.DelTimer(item);
             }
-            Dictionary<int, float> sfx = SkillActionData.dataMap[actionID].effects;
+            Dictionary<int, float> sfx = (SkillActionData.dataMap[actionID] as SkillActionData).effects;
             if (null == sfx)
             {
                 return;
@@ -52,11 +52,11 @@ namespace CaomaoFramework
         /// <param name="actionId"></param>
         public void PlayEffect(int actionId)
         {
-            if (!SkillAction.dataMap.ContainsKey(actionId))
+            if (!SkillActionData.dataMap.ContainsKey(actionId))
             {
                 return;
             }
-            Dictionary<int, float> sfx = SkillAction.dataMap[actionId].sfx;
+            Dictionary<int, float> sfx = SkillActionData.dataMap[actionId].effects;
             EffectHandler sfxHandler = theOwner.effectHandler;
             if (sfx != null && sfx.Count > 0)
             {

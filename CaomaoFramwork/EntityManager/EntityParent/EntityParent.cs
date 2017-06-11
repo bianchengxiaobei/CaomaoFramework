@@ -292,11 +292,11 @@ namespace CaomaoFramework
             }
             if (act == (int)ActionConstants.knock_down)
             {
-                knock_down = true;
+                m_bKnockDown = true;
             }
             else if (act == (int)ActionConstants.hited_ground)
             {
-                hit_ground = true;
+                m_bHitOnGround = true;
             }
         }
         /// <summary>

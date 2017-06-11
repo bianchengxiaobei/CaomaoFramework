@@ -26,6 +26,10 @@ namespace CaomaoFramework
                 this.m_battleManager.OnAttacking(actionID, ltwm, rotation, forward, position);
             }
         }
+        public virtual void OnAttacking(int actionId)
+        {
+
+        }
         /// <summary>
         /// 带方向释放技能
         /// </summary>
@@ -41,14 +45,7 @@ namespace CaomaoFramework
         /// <param name="skillId"></param>
         public virtual void CastSkill(int skillId)
         {
-            walkingCastSkill = (currentMotionState == MotionState.WALKING);
-            currSpellID = skillId;
-            SkillData data = SkillData.dataMap[currSpellID];
-            if (data == null || aiRate == 0)
-            {
-                return;
-            }
-            m_battleManager.CastSkill(currSpellID);
+
         }
         public virtual void CastSkill(string skillName)
         {
@@ -59,34 +56,13 @@ namespace CaomaoFramework
         /// </summary>
         /// <param name="remove"></param>
         /// <param name="naturalEnd"></param>
-        public virtual void ClearSkill(bool remove = false, bool naturalEnd = false)
+        public virtual void ClearSkill(bool remove = false)
         {
-            TimerManager.DelTimer(hitTimerID);
-            TimerManager.DelTimer(delayAttackTimerID);
-            if (currSpellID != -1)
-            {
-                if (SkillAction.dataMap.ContainsKey(currHitAction) && remove)
-                {
-                    RemoveSfx(currHitAction);
-                }
-                SkillData data;
-                if (SkillData.dataMap.TryGetValue(currSpellID, out data) && remove)
-                {
-                    foreach (var action in data.skillAction)
-                    {
-                        RemoveSfx(action);
-                    }
-                }
-                currHitAction = -1;
-            }
-            hitTimer.Clear();
-            GameMotor theMotor = motor;
-            if (Transform)
-            {
-                theMotor.SetExtraSpeed(0);
-            }
-            ChangeMotionState(MotionState.IDLE);
-            currSpellID = -1;
+
+        }
+        public virtual void ActionChange(string preActName,string currActName)
+        {
+
         }
         #endregion
         #region 公有方法

@@ -57,6 +57,7 @@ namespace CaomaoFramework
         }
         public virtual void ActChange()
         {
+            Debug.Log("1111");
             if (null == this.m_animator)
             {
                 return;
@@ -73,27 +74,16 @@ namespace CaomaoFramework
             string curActName = state[0].clip.name;
             if (curActName != preActName)
             {
+                Debug.Log("ActionChange1");
                 if (ActChangeHandle != null)
                 {
+                    Debug.Log("ActionChange2");
                     ActChangeHandle(preActName, curActName);//动作变换
                 }
+                m_animator.SetInteger("Action", 0);
                 preActName = curActName;
             }
-            if (curActName.EndsWith("hit") && preActName.EndsWith("hit"))
-            {
-                int act = this.m_animator.GetInteger("Action");
-                if (act != 0 && act != -1)
-                {
-                    this.m_animator.SetInteger("Action", 0);
-                }
-            }
-            if (GetEntity() != null && curActName != null &&
-                GetEntity().stiff &&
-                (curActName.EndsWith("ready") ||
-                curActName.EndsWith("run")))
-            {
-
-            }
+            
         }
         public virtual void Attack(int spellID)
         {

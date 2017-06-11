@@ -34,6 +34,10 @@ namespace CaomaoFramework
         {
             m_skillManager.OnAttacking(nSkillID, ltwm, rotation, forward, position);
         }
+        public virtual void OnAttacking(int nSkillID)
+        {
+            m_skillManager.OnAttacking(nSkillID);
+        }
         /// <summary>
         /// 释放技能状态
         /// </summary>

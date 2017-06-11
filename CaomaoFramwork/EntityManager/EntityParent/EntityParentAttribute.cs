@@ -16,6 +16,7 @@ namespace CaomaoFramework
         public EffectHandler effectHandler;
         protected EffectManager effectManager;
         protected BattleManagerBase m_battleManager;
+        public SkillManagerBase m_skillManager;
         public FSMParent fsmMotion;
         public AudioSource audioSource;
         protected string currentMotionState = MotionState.IDLE;
@@ -25,15 +26,18 @@ namespace CaomaoFramework
         /// <summary>
         /// 击飞
         /// </summary>
-        public bool knock_down = false;
+        private bool m_bKnockDown = false;
         /// <summary>
         /// 受击倒地
         /// </summary>
-        public bool hit_ground = false;
+        private bool m_bHitOnGround = false;
+        private bool m_bIsDead = false;
         public bool charging = false;
         public bool canMove = true;//能否移动
-
-        public int currSpellID = -1;//技能id，小于等于0为当前空闲
+        /// <summary>
+        /// 当前的技能id，小于等于0为当前空闲
+        /// </summary>
+        public int currSkillID = -1;
         public int currHitAction = -1;//当前hitAction的ID
         public int hitActionIdx = 0;//当前技能hitAction索引
 
@@ -53,12 +57,6 @@ namespace CaomaoFramework
         private byte m_level;//等级
         protected uint m_curHp;//生命值
 
-        protected ulong stateFlag = 0;//角色状态标记位
-        public const int dizzy_state = 1 << 1;//眩晕状态,2
-        public const int immobilize_state = 1 << 3;//固定状态,8
-        public const int silent_state = 1 << 4;//沉默状态,16
-        public const int immunity_state = 1 << 10;//免疫状态,1024
-        public const int no_hit_state = 1 << 11;//没有被攻击到,2048
         //装备物品信息
         public Hashtable itemInfo;
         //渲染节点组
@@ -99,16 +97,12 @@ namespace CaomaoFramework
             }
         }
         /// <summary>
-        /// 状态标记（改变状态在这里实现）
+        /// 是否死亡
         /// </summary>
-        public virtual ulong StateFlag
+        public bool IsDead
         {
-            get { return this.stateFlag; }
-            set
-            {
-                StateChange(value);
-                stateFlag = value;
-            }
+            get { return this.m_bIsDead; }
+            set { this.m_bIsDead = false; }
         }
         /// <summary>
         ///速度
@@ -161,7 +155,6 @@ namespace CaomaoFramework
                 }
             }
         }
-
         public Dictionary<string, object> ObjectAttrs
         {
             get { return this.objectAttrs; }

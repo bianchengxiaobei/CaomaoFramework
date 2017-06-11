@@ -27,11 +27,11 @@ namespace CaomaoFramework
         /// </summary>
         public void SetActionByStateFlagInIdleState()
         {
-            if ((this.stateFlag & dizzy_state) != 0)//也就是stateFlag的第二位必须为1
-            {
-                SetAction(16);
-                AddCallbackInFrames(() => { SetAction(999); });
-            }
+            //if ((this.stateFlag & dizzy_state) != 0)//也就是stateFlag的第二位必须为1
+            //{
+            //    SetAction(16);
+            //    AddCallbackInFrames(() => { SetAction(999); });
+            //}
         }
         #endregion
         #region 子类重写方法

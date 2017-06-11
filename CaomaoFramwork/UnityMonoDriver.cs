@@ -26,7 +26,7 @@ namespace CaomaoFramework
             {
                 DontDestroyOnLoad(base.transform.parent);
             }
-            //InvokeRepeating("Tick", 2f, 0.1f);
+            InvokeRepeating("Tick", 2f, 0.1f);
             resourceManager.Init(GameObject.Find("ResourceManager").GetComponent<GameResourceManager>());
             uiManager.Init();
         }
@@ -46,6 +46,39 @@ namespace CaomaoFramework
         private void Tick()
         {
             //StoryManager.singleton.Tick();
+            TimerManager.Tick();
+        }
+        private void OnApplicationFocus(bool focus)
+        {
+            if (focus)
+            {
+                if (GameControllerBase.thePlayer != null)
+                {
+                    GameControllerBase.thePlayer.m_skillManager.Compensation(prePay);
+                    TimerManager.AddTimer(1000, 0, () => { prePay = 0; });
+                }
+            }
+        }
+        private float prePause = 0;
+        private float prePay = 0;
+        private void OnApplicationPause(bool pause)
+        {
+            if (pause)
+            {
+                prePause = Time.realtimeSinceStartup;
+            }
+            else
+            {
+                float cur = Time.realtimeSinceStartup;
+                GameControllerBase.StartTime = cur;
+                float pay = cur - prePause;
+                if (GameControllerBase.thePlayer != null)
+                {
+                    GameControllerBase.thePlayer.m_skillManager.Compensation(-prePay);
+                    prePay = 0;
+                    GameControllerBase.thePlayer.m_skillManager.Compensation(pay);
+                }
+            }
         }
     }
 }

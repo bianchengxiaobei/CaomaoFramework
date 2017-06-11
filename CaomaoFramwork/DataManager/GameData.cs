@@ -118,7 +118,7 @@ namespace CaomaoFramework
                         var t = type.GetConstructor(Type.EmptyTypes).Invoke(null);
                         foreach (var prop in props)
                         {
-                            if (prop.Name.Equals("ID"))
+                            if (prop.Name.Equals("ID",StringComparison.OrdinalIgnoreCase))
                             {
                                 prop.SetValue(t, item.Key, null);//如果是id的话，就设置属性值
                             }
@@ -126,7 +126,7 @@ namespace CaomaoFramework
                             {
                                 if (item.Value.ContainsKey(prop.Name))
                                 {
-                                    var value = GetValue(item.Value[prop.Name], prop.PropertyType);
+                                    var value = UnityToolBase.GetValue(item.Value[prop.Name], prop.PropertyType);
                                     prop.SetValue(t, value, null);
                                 }
                             }
@@ -141,73 +141,6 @@ namespace CaomaoFramework
                 Debug.LogError(e.ToString());
             }
             return result;
-        }
-        /// <summary>
-        /// 将字符串转化成为对应类型的值
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static object GetValue(string value, Type type)
-        {
-            if (null == type)
-            {
-                return null;
-            }
-            else if (type == typeof(int))
-            {
-                return Convert.ToInt32(value);
-            }
-            else if (type == typeof(float))
-            {
-                return float.Parse(value);
-            }
-            else if (type == typeof(byte))
-            {
-                return Convert.ToByte(value);
-            }
-            else if (type == typeof(double))
-            {
-                return Convert.ToDouble(value);
-            }
-            else if (type == typeof(bool))
-            {
-                if (value == "false")
-                {
-                    return false;
-                }
-                else if (value == "true")
-                {
-                    return true;
-                }
-            }
-            else if (type == typeof(string))
-            {
-                return value;
-            }
-            else if (type == typeof(Vector3))
-            {
-                Vector3 result = default(Vector3);
-                try
-                {
-                    string[] array = value.Split(new char[]
-                    {
-                    ','
-                    });
-                    if (array.Length == 3)
-                    {
-                        result.x = (float)Convert.ToDouble(array[0]);
-                        result.y = (float)Convert.ToDouble(array[1]);
-                        result.z = (float)Convert.ToDouble(array[2]);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogException(ex);
-                }
-                return result;
-            }
-            return null;
         }
     }
 }

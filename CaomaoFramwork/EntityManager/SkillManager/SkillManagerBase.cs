@@ -19,5 +19,13 @@ namespace CaomaoFramework
         {
 
         }
+        public virtual void OnAttacking(int hitActionId)
+        {
+
+        }
+        public virtual void Compensation(float t)
+        {
+
+        }
     }
 }

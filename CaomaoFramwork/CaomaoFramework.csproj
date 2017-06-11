@@ -57,12 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonDefine\Extenstion\DictionaryExtenstion.cs" />
+    <Compile Include="CommonDefine\Extenstion\StringExtenstion.cs" />
     <Compile Include="CommonDefine\SingleTemplate\Singleton.cs" />
     <Compile Include="CommonDefine\UnityToolBase.cs" />
     <Compile Include="DataManager\Datas\DataSceneConfig.cs" />
-    <Compile Include="DataManager\Datas\Skill\SkillAction.cs" />
     <Compile Include="DataManager\Datas\Skill\SkillActionData.cs" />
-    <Compile Include="DataManager\Datas\Skill\SkillData.cs" />
     <Compile Include="DataManager\GameData.cs" />
     <Compile Include="DataManager\XMLParser.cs" />
     <Compile Include="EffectManager\EffectData.cs" />
@@ -80,11 +79,13 @@
     <Compile Include="EntityManager\Fsm\FSMParent.cs" />
     <Compile Include="EntityManager\Fsm\IEntityState.cs" />
     <Compile Include="EntityManager\Fsm\MotionState.cs" />
+    <Compile Include="EntityManager\GameControllerBase.cs" />
     <Compile Include="EntityManager\GameMotor\GameMotor.cs" />
     <Compile Include="EntityManager\SkillManager\SkillManagerBase.cs" />
     <Compile Include="EventDispatch\CEventParam.cs" />
     <Compile Include="EventDispatch\EventDelegate.cs" />
     <Compile Include="EventDispatch\EventDispatch.cs" />
+    <Compile Include="EventDispatch\EventsBase.cs" />
     <Compile Include="GameStateManager\ClientGameStateMachine.cs" />
     <Compile Include="GameStateManager\ClientGameStateManager.cs" />
     <Compile Include="GameStateManager\ClientStateBase.cs" />
@@ -161,8 +162,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy /y "$(TargetDir)$(TargetFileName)" "D:\chenfuling\Unity5\WorkSpace\ThroughTheTime\Assets\Plugins\CaomaoFrameworkPlugin\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
