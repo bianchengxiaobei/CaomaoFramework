@@ -286,18 +286,18 @@ namespace CaomaoFramework
                 return;
             }
             animator.SetInteger("Action", act);//设置人物动画的状态
-            if (weaponAnimator)
-            {
-                weaponAnimator.SetInteger("Action", act);//设置人物武器动画状态
-            }
-            if (act == (int)ActionConstants.knock_down)
-            {
-                m_bKnockDown = true;
-            }
-            else if (act == (int)ActionConstants.hited_ground)
-            {
-                m_bHitOnGround = true;
-            }
+            //if (weaponAnimator)
+            //{
+            //    weaponAnimator.SetInteger("Action", act);//设置人物武器动画状态
+            //}
+            //if (act == (int)ActionConstants.knock_down)
+            //{
+            //    m_bKnockDown = true;
+            //}
+            //else if (act == (int)ActionConstants.hited_ground)
+            //{
+            //    m_bHitOnGround = true;
+            //}
         }
         /// <summary>
         /// 设置动画播放速度

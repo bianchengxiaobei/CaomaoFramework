@@ -57,7 +57,6 @@ namespace CaomaoFramework
         }
         public virtual void ActChange()
         {
-            Debug.Log("1111");
             if (null == this.m_animator)
             {
                 return;
@@ -74,12 +73,12 @@ namespace CaomaoFramework
             string curActName = state[0].clip.name;
             if (curActName != preActName)
             {
-                Debug.Log("ActionChange1");
                 if (ActChangeHandle != null)
                 {
-                    Debug.Log("ActionChange2");
                     ActChangeHandle(preActName, curActName);//动作变换
                 }
+                Debug.Log("cur:"+curActName);
+                Debug.Log("pre:" + preActName);
                 m_animator.SetInteger("Action", 0);
                 preActName = curActName;
             }
